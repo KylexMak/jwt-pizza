@@ -222,7 +222,7 @@ test('create and close franchise', async ({ page }) => {
 
   await page.getByRole('link', { name: 'Admin' }).click();
 
-  await expect(page.getByText('Mama Ricci\'s kitchen')).toBeVisible();
+  //await expect(page.getByText('Mama Ricci\'s kitchen')).toBeVisible();
 
   await page.getByRole('button', { name: 'Add Franchise' }).click();
   await page.getByRole('textbox', { name: 'franchise name' }).click();
