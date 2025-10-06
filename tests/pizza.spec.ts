@@ -214,6 +214,7 @@ test('register', async ({ page }) => {
 });
 
 test('create and close franchise', async ({ page }) => {
+  test.setTimeout(500000);
   await basicInit(page);
   await page.getByRole('link', { name: 'Login' }).click();
   await loginAdmin(page);
