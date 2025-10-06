@@ -267,6 +267,20 @@ test('create Store and close store', async ({page}) => {
     }
   });
 
+  await page.route('*/**/api/franchise/7/store', async (route) => {
+    if(route.request().method() === 'POST'){
+      washingtonArea.stores.push({id: 1, name: 'The Best', totalRevenue: 0})
+      await route.fulfill({json: washingtonArea})
+    }
+  });
+
+  await page.route('*/**/api/franchise/7/store/1', async (route) => {
+    if(route.request().method() === 'DELETE'){
+      washingtonArea.stores = washingtonArea.stores.filter(s => s.id !== 1);
+      await route.fulfill({json: {message: 'store deleted'}})
+    }
+  });
+
   await page.goto('/');
 
   await page.getByRole('link', {name: 'Login'}).click();
@@ -279,6 +293,14 @@ test('create Store and close store', async ({page}) => {
   
   await expect(page.getByRole('link', {name: 'franchise-dashboard'})).toBeVisible();
   await expect(page.getByRole('heading')).toContainText('Washington Area');
+  await page.getByRole('button', { name: 'Create store' }).click();
+  await page.getByRole('textbox', { name: 'store name' }).click();
+  await page.getByRole('textbox', { name: 'store name' }).fill('The Best');
+  await page.getByRole('button', { name: 'Create' }).click();
+  await expect(page.getByRole('cell', { name: 'The Best' })).toBeVisible();
+  await page.getByRole('row', { name: 'The Best 0 ₿ Close' }).getByRole('button').click();
+  await expect(page.getByText('Are you sure you want to')).toBeVisible();
+  await page.getByRole('button', { name: 'Close' }).click();
 });
 
 test('visit pages', async ({page}) => {
