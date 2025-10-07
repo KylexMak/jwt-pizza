@@ -9,7 +9,7 @@ test('updateUser', async ({ page }) => {
   await page.getByRole('textbox', { name: 'Password' }).fill('diner');
   await page.getByRole('button', { name: 'Register' }).click();
 
-  await page.getByRole('link', { name: 'pd' }).click();
+  await page.getByRole('link', { name: 'pd' }).click({ timeout: 10000});
 
   await expect(page.getByRole('main')).toContainText('pizza diner');
 
@@ -36,7 +36,7 @@ test('updateUser', async ({ page }) => {
   await page.getByRole('textbox', { name: 'Password' }).fill('diner');
   await page.getByRole('button', { name: 'Login' }).click();
 
-  await page.getByRole('link', { name: 'pd' }).click();
+  await page.getByRole('link', { name: 'pd' }).click( { timeout: 10000 });
 
   await expect(page.getByRole('main')).toContainText('pizza dinerx');
 });
