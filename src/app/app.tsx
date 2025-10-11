@@ -25,6 +25,7 @@ import Breadcrumb from '../components/breadcrumb';
 import { pizzaService } from '../service/service';
 import { Role, User } from '../service/pizzaService';
 import 'preline/preline';
+import DeleteUSer from '../views/deleteUser';
 
 declare global {
   interface Window {
@@ -64,6 +65,7 @@ export default function App() {
   const navItems = [
     { title: 'Home', to: '/', component: <Home />, display: [] },
     { title: 'Diner', to: '/diner-dashboard', component: <DinerDashboard user={user} setUser={setUser} />, display: [] },
+    { title: 'Delete User', to: '/:subPath?/delete-user', component: <DeleteUSer />, display: [] },
     { title: 'Order', to: '/menu', component: <Menu />, display: ['nav'] },
     {
       title: 'Franchise',

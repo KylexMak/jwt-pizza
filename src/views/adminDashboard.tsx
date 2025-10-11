@@ -1,12 +1,11 @@
 import React from 'react';
 import View from './view';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import NotFound from './notFound';
 import { pizzaService } from '../service/service';
 import { Franchise, FranchiseList, Role, Store, User, UserList } from '../service/pizzaService';
 import FranchiseTable from './franchiseTable';
 import UsersTable from './usersTable';
-import { setServers } from 'dns';
 
 interface Props {
   user: User | null;
@@ -52,7 +51,7 @@ export default function AdminDashboard(props: Props) {
   }
 
   async function deleteUser(user: User) {
-
+    navigate('/admin-dashboard/delete-user', { state: { user: user } });
   }
 
   let response = <NotFound />;
