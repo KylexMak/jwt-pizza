@@ -1,99 +1,40 @@
-# Incident: YYYY-MM-DD HH-mm-ss
+# Incident: 2025-12-02 13-23-15
 
 ## Summary
 
-> [!NOTE]
-> Write a summary of the incident in a few sentences. Include what happened, why, the severity of the incident and how long the impact lasted.
-
-```md
-**EXAMPLE**:
-
-Between the hour of {time range of incident, e.g. 15:45 and 16:35} on {DATE}, {NUMBER} users encountered {EVENT SYMPTOMS}. The event was triggered by a {CHANGE} at {TIME OF CHANGE THAT CAUSED THE EVENT}. The {CHANGE} contained {DESCRIPTION OF OR REASON FOR THE CHANGE, such as a change in code to update a system}.
-
-A bug in this code caused {DESCRIPTION OF THE PROBLEM}. The event was detected by {MONITORING SYSTEM}. The team started working on the event by {RESOLUTION ACTIONS TAKEN}. This {SEVERITY LEVEL} incident affected {X%} of users.
-
-There was further impact as noted by {e.g. NUMBER OF SUPPORT TICKETS SUBMITTED, SOCIAL MEDIA MENTIONS, CALLS TO ACCOUNT MANAGERS} were raised in relation to this incident.
-```
+Between the hour of 13:23 and 13:30 on 12-02-2025, 2-3 users encountered pizza creation failures on their orders. The event was triggered by a chaos monkey at 13:23. The monkey entered the system and cause all calls to the factory to fail. As such, there were no pizzas being created as the factory was not receiving the request or verifying it.
 
 ## Detection
 
-> [!NOTE]
-> When did the team detect the incident? How did they know it was happening? How could we improve time-to-detection? Consider: How would we have cut that time by half?
-
-```md
-**EXAMPLE**:
-
-This incident was detected when the {ALERT TYPE} was triggered and {TEAM/PERSON} were paged.
-
-Next, {SECONDARY PERSON} was paged, because {FIRST PERSON} didn't own the service writing to the disk, delaying the response by {XX MINUTES/HOURS}.
-
-{DESCRIBE THE IMPROVEMENT} will be set up by {TEAM OWNER OF THE IMPROVEMENT} so that {EXPECTED IMPROVEMENT}.
-```
+This incident was detected when the Kyle Mak checked the Pizza dashboard. Since there is only one person on the team, no other individuals were notified.
+To improve response time, the alerts will need to be changed to notify all members on the team. The previous was checking for pizza failure over the time span of 5 minutes. Kyle Mak will change the rate to look for an increase of pizza failure greater than 3 over the time span of 1 minute.
 
 ## Impact
 
-> [!NOTE]
-> Describe how the incident impacted internal and external users during the incident. Include how many support cases were raised.
-
-```md
-**EXAMPLE**:
-
-For {XXhrs XX minutes} between {XX:XX UTC and XX:XX UTC} on {MM/DD/YY}, {SUMMARY OF INCIDENT} our users experienced this incident.
-
-This incident affected {XX} customers (X% OF {SYSTEM OR SERVICE} USERS), who experienced {DESCRIPTION OF SYMPTOMS}.
-
-{XX NUMBER OF SUPPORT TICKETS AND XX NUMBER OF SOCIAL MEDIA POSTS} were submitted.
-```
+For 7 minutes between 13:23 and 13:30 on 12-02-2025, our users experienced a failure of pizza orders.
+This incident affected 2-3 customers (100% OF USERS), who experienced pizza creation failures.
+No tickets or compliants were submitted.
 
 ## Timeline
 
-> [!NOTE]
-> Detail the incident timeline. We recommend using UTC to standardize for timezones.
-> Include any notable lead-up events, any starts of activity, the first known impact, and escalations. Note any decisions or changed made, and when the incident ended, along with any post-impact events of note.
-
-```md
-**EXAMPLE**:
-
 All times are UTC.
 
-- _11:48_ - K8S 1.9 upgrade of control plane is finished
-- _12:46_ - Upgrade to V1.9 completed, including cluster-auto scaler and the BuildEng scheduler instance
-- _14:20_ - Build Engineering reports a problem to the KITT Disturbed
-- _14:27_ - KITT Disturbed starts investigating failures of a specific EC2 instance (ip-203-153-8-204)
-- _14:42_ - KITT Disturbed cordons the node
-- _14:49_ - BuildEng reports the problem as affecting more than just one node. 86 instances of the problem show failures are more systemic
-- _15:00_ - KITT Disturbed suggests switching to the standard scheduler
-- _15:34_ - BuildEng reports 200 pods failed
-- _16:00_ - BuildEng kills all failed builds with OutOfCpu reports
-- _16:13_ - BuildEng reports the failures are consistently recurring with new builds and were not just transient.
-- _16:30_ - KITT recognize the failures as an incident and run it as an incident.
-- _16:36_ - KITT disable the Escalator autoscaler to prevent the autoscaler from removing compute to alleviate the problem.
-- _16:40_ - KITT confirms ASG is stable, cluster load is normal and customer impact resolved.
-```
+- _13:23_ - Chaos Monkey was injected
+- _13:24_ - Pizza creation failures spiked
+- _13:25_ - Kyle Mak looked at the pizza creation failure graph
+- _13:26_ - Kyle Mak checked the revenue of the business and verified that all pizzas were failing to be created.
+- _13:27_ - Kyle Mak checked the logs
+- _13:29_ - Kyle Mak found the support link to get rid of the Chaos Monkey
+- _13:30_ - Kyle Mak removed the Chaos Monkey
+- _13:31_ - Kyle Mak changed the alerts to activate on a more accurate measurement threshold
 
 ## Response
 
-> [!NOTE]
-> Who responded to the incident? When did they respond, and what did they do? Note any delays or obstacles to responding.
-
-```md
-**EXAMPLE**:
-
-After receiving a page at {XX:XX UTC}, {ON-CALL ENGINEER} came online at {XX:XX UTC} in {SYSTEM WHERE INCIDENT INFO IS CAPTURED}.
-
-This engineer did not have a background in the {AFFECTED SYSTEM} so a second alert was sent at {XX:XX UTC} to {ESCALATIONS ON-CALL ENGINEER} into the who came into the room at {XX:XX UTC}.
-```
+Kyle Mak responded to the incident. They checked the number of pizza creation failures and the anount fo revenue being lost to confirm that customers were not able to order pizzas. Then, he checked the logs to see what was failing. An obstacle that caused a small delay to responding was having the log table refresh every 5 seconds. It made it difficult to pinpoint a specific log. He changed it to 5 minute long refresh cycles and found a log that was responding with 500 status code. Afer reading the log, there was a support link in the log that got rid of the chaos monkey.
 
 ## Root cause
 
-> [!NOTE]
-> Note the final root cause of the incident, the thing identified that needs to change in order to prevent this class of incident from happening again.
-
-```md
-**EXAMPLE**:
-
-A bug in connection pool handling led to leaked connections under failure conditions, combined with lack of visibility into connection state.
-```
+A chaos monkey was injected into the system.
 
 ## Resolution
 
@@ -101,34 +42,12 @@ A bug in connection pool handling led to leaked connections under failure condit
 > Describe how the service was restored and the incident was deemed over. Detail how the service was successfully restored and you knew how what steps you needed to take to recovery.
 > Depending on the scenario, consider these questions: How could you improve time to mitigation? How could you have cut that time by half?
 
-```md
-**EXAMPLE**:
-By Increasing the size of the BuildEng EC3 ASG to increase the number of nodes available to support the workload and reduce the likelihood of scheduling on oversubscribed nodes
-
-Disabled the Escalator autoscaler to prevent the cluster from aggressively scaling-down
-Reverting the Build Engineering scheduler to the previous version.
-```
+The service was restored after visiting the support link that got rid of the monkey. Visiting the link was apparent as the description of the link told us that the Chaos Monkey would be removed when clicked. I could cut the response time in half by having better alerts as well as stronger security. Another way to avoid errors of third party dependency failures is to create things in house.
 
 ## Prevention
 
-> [!NOTE]
-> Now that you know the root cause, can you look back and see any other incidents that could have the same root cause? If yes, note what mitigation was attempted in those incidents and ask why this incident occurred again.
-
-```md
-**EXAMPLE**:
-
-This same root cause resulted in incidents HOT-13432, HOT-14932 and HOT-19452.
-```
+While there is no way to control whether a third party dependency crashes, we can control how our application responds. A better way to respond might be using a strategy like the circuit breaker pattern. The Circuit Breaker pattern functions as an automated safety switch within software architecture, designed to prevent cascading failures. It wraps calls to external dependencies, and if a service fails repeatedly—such as by timing out or returning 500 errors—the breaker trips to an Open state. This state immediately blocks subsequent requests without attempting to contact the failing dependency, thereby preserving system resources and preventing thread pool exhaustion. After a designated cooling-off period, the breaker transitions to a Half-Open state to tentatively allow a single test request; success resets the breaker to Closed (normal operation), while failure trips it back to Open.
 
 ## Action items
 
-> [!NOTE]
-> Describe the corrective action ordered to prevent this class of incident in the future. Note who is responsible and when they have to complete the work and where that work is being tracked.
-
-```md
-**EXAMPLE**:
-
-1. Manual auto-scaling rate limit put in place temporarily to limit failures
-1. Unit test and re-introduction of job rate limiting
-1. Introduction of a secondary mechanism to collect distributed rate information across cluster to guide scaling effects
-```
+Kyle Mak should change the alerts so it triggers on an accurate measurement. 
